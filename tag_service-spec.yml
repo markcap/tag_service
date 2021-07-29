@@ -1,0 +1,258 @@
+openapi: 3.0.0
+info:
+  title: Tag Service
+  version: 1.0.0
+paths:
+  /tag-groups:
+    get:
+      responses:
+        '200':
+          description: A JSON array of tag groups
+          content:
+            application/json:
+              schema:
+                properties:
+                  tagGroups:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/TagGroup'                          
+
+  /tag-groups/{tagGroupId}:
+    get:
+      parameters:
+        - name: tagGroupId
+          in: path
+          required: true
+          description: The ID of the tag group to return.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: A JSON tag group object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagGroup'                          
+        '400':
+          description: The specified tag group ID is invalid (not a number).
+        '404':
+          description: A tag group with the specified ID was not found.
+  /tags:
+    get:
+      responses:
+        '200':
+          description: A JSON array of tags
+          content:
+            application/json:
+              schema:
+                properties:
+                  tags:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/Tag'                          
+  /tags/{tagId}:
+    get:
+      parameters:
+        - name: tagId
+          in: path
+          required: true
+          description: The ID of the tag to return.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: A JSON tag object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'                          
+        '400':
+          description: The specified tag ID is invalid (not a number).
+        '404':
+          description: A tag with the specified ID was not found.
+  /item-tags:
+    get:
+      parameters:
+        - in: query
+          name: foreignId
+          schema:
+            type: integer
+        - in: query
+          name: itemTypeName
+          schema:
+            type: string
+        - in: query
+          name: itemId
+          schema:
+            type: integer
+        - in: query
+          name: tagGroupName
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A JSON array of itemTags
+          content:
+            application/json:
+              schema:
+                properties:
+                  itemTags:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/ItemTag'                          
+  /item-tags/{itemTagId}:
+    get:
+      parameters:
+        - name: itemTagId
+          in: path
+          required: true
+          description: The ID of the itemTag to return.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: A JSON itemTag object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemTag'                          
+        '400':
+          description: The specified itemTag ID is invalid (not a number).
+        '404':
+          description: An itemTag with the specified ID was not found.
+  /items:
+    get:
+      parameters:
+        - in: query
+          name: foreignId
+          schema:
+            type: integer
+        - in: query
+          name: itemTypeId
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A JSON array of items
+          content:
+            application/json:
+              schema:
+                properties:
+                  items:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/Item'
+  /items/{itemId}:
+    get:
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          description: The ID of the item to return.
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: A JSON item object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'                          
+        '400':
+          description: The specified item ID is invalid (not a number).
+        '404':
+          description: An item with the specified ID was not found.
+components:
+  schemas:
+    Tag:
+      properties:
+        tagId:
+          type: integer
+        tagName:
+          type: string
+        tagGroup:
+          $ref: '#/components/schemas/TagGroup'
+        active:
+          type: boolean
+      required:  
+        - tagId
+        - tagName
+        - tagGroup
+        - active
+    TagGroupType:
+      properties:
+        tagGroupTypeId:
+          type: integer
+        tagGroupTypeName:
+          type: string
+        active:
+          type: boolean
+      required:
+      - tagGroupTypeId
+      - tagGroupTypeName
+      - active
+    TagGroup:
+      properties:
+        tagGroupId:
+          type: integer
+        tagGroupName:
+          type: string
+        tagGroupType:
+          $ref: '#/components/schemas/TagGroupType'
+        parentTag:
+          $ref: '#/components/schemas/Tag'
+        active:
+          type: boolean
+      required:
+        - tagGroupId
+        - tagGroupName
+        - tagGroupType
+        - active
+    ItemTag:
+      properties:
+        itemTagId:
+          type: integer
+        item:
+          $ref: '#/components/schemas/Item'
+        tag:
+          $ref: '#/components/schemas/Tag'
+        active:
+          type: boolean
+      required:
+      - itemTagId
+      - item
+      - tag
+      - active
+    ItemType:
+      properties:
+        itemTypeId:
+          type: integer
+        itemTypeName:
+          type: string
+      required:
+      - itemTypeId
+      - itemTypeName
+    Item:
+      properties:
+        itemId:
+          type: integer
+        foreignId:
+          type: integer
+        taggableType:
+          $ref: '#/components/schemas/ItemType'
+        itemTags:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemTag'
+      required:
+      - itemId
+      - foreignId
+      - itemType

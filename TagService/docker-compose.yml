@@ -1,0 +1,27 @@
+version: "3"
+services:
+  web:
+    build: .
+    command: dotnet watch run
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app:delegated
+    environment:
+      DB_CONNECTION_STRING: "Host=postgres;Port=5432;Username=root;Password=root;Database=tags_development;"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:latest
+    ports:
+      - "35432:5432"
+    restart: always
+    volumes:
+      - postgresql:/var/lib/postgresql
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+      POSTGRES_DB: "tags_development"
+volumes:
+  postgresql:

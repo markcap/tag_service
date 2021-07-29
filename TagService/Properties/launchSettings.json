@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:30886",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger"
+    },
+    "TagService": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        // Uncomment to run locally. Beware not to check-it in. Values will overwrite Kubernetes ConfigMap values
+        //"ASPNETCORE_ENVIRONMENT": "Development",
+        // -- To run local postgresql, docker commands:
+        // -- docker pull postgres
+        // -- docker create -v "C:\test\PostgresData" --name PostgresData alpine
+        // -- docker run --rm --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 --volumes-from PostgresData postgres
+        //"DB_CONNECTION_STRING": "Server=127.0.0.1;port=5432;database=tags;user id=postgres;password=docker;pooling=true"
+      },
+      "applicationUrl": "http://localhost:5000"
+    }
+  }
+}
